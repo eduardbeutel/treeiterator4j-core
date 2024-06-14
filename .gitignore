@@ -1,0 +1,7 @@
+*.pyc
+.idea
+.cache
+build/
+target/
+/.project
+/.pydevproject
