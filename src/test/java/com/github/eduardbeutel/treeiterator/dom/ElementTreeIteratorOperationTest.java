@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.xmlunit.matchers.CompareMatcher.isIdenticalTo;
 import static org.junit.Assert.assertTrue;
 
-public class ElementTreeIteratorOperationTests
+public class ElementTreeIteratorOperationTest
 {
 
     public static String DEFAULT_DOCUMENT = """

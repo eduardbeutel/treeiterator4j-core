@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ElementTreeIteratorConditionTests
+public class ElementTreeIteratorConditionTest
 {
 
     public static String DEFAULT_DOCUMENT = """
