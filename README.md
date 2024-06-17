@@ -2,6 +2,8 @@
 
 TreeIterator is a pattern for declarative iterators that allows commands to be applied to each tree node. A command consists in its simplest form of a condition and an operation. The pattern is useful for the manipulation of tree objects like XML or JSON and information gathering. The tree is iterated only once. The current implementation is in Java but the pattern is not language specific.
 
+[![codecov](https://codecov.io/gh/eduardbeutel/treeiterator/graph/badge.svg?token=QDND4FUF1R)](https://codecov.io/gh/eduardbeutel/treeiterator)
+
 ### Structure
 
     TreeIterator.topDown(tree)
