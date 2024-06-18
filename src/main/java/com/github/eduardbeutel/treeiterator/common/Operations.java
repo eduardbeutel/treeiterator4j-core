@@ -46,8 +46,18 @@ public class Operations<Node>
     {
         if (TraversalDirection.BOTTOM_UP == iterator.getDirection())
             throw new UnsupportedFeatureException("skip() can not be used in bottomUp() mode.");
-        Consumer<IterationStep<Node>> markToSkip = step -> step.setSkip(true);
-        return thenForStep(markToSkip);
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setSkip(true);
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> remove()
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step ->
+        {
+            if(step.isRoot()) throw new UnsupportedFeatureException("The root element can not be removed.");
+            step.setRemove(true);
+        };
+        return thenForStep(executableConsumer);
     }
 
     public Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)

@@ -1,21 +1,24 @@
 package com.github.eduardbeutel.treeiterator.common;
 
-public class IterationStep<IdNode>
+public class IterationStep<Node>
 {
 
-    private IdNode node;
-    private String id;
-    private String path;
-    private boolean skip;
+    private Node node;
+    private String id = "";
+    private String path = "";
 
-    public IterationStep(IdNode node, String id, String path)
+    private boolean skip = false;
+    private boolean remove = false;
+    private boolean root = false;
+
+    public IterationStep(Node node, String id, String path)
     {
         this.node = node;
         this.id = id;
         this.path = path;
     }
 
-    public IdNode getNode()
+    public Node getNode()
     {
         return node;
     }
@@ -38,5 +41,24 @@ public class IterationStep<IdNode>
     public boolean isSkip()
     {
         return skip;
+    }
+
+    public void setRemove(boolean remove)
+    {
+        this.remove = remove;
+    }
+
+    public boolean isRemove()
+    {
+        return remove;
+    }
+
+    public boolean isRoot()
+    {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }

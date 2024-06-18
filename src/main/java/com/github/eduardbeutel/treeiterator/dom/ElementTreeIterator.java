@@ -6,6 +6,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ElementTreeIterator extends TreeIterator<Element>
 {
 
@@ -61,6 +64,7 @@ public class ElementTreeIterator extends TreeIterator<Element>
             if (step.isSkip()) return;
         }
 
+        List<Element> toRemove = null;
         NodeList children = step.getNode().getChildNodes();
         for (int i = 0; i < children.getLength(); i++)
         {
@@ -70,7 +74,15 @@ public class ElementTreeIterator extends TreeIterator<Element>
 
             IterationStep<Element> childStep = createChildStep(step, childElement, getId(childElement));
             iterateStep(childStep);
+
+            if (childStep.isRemove())
+            {
+                if (toRemove == null) toRemove = new ArrayList<>();
+                toRemove.add(childStep.getNode());
+            }
         }
+
+        remove(step.getNode(), toRemove);
 
         if (TraversalDirection.BOTTOM_UP == getDirection()) executeCommands(step);
     }
@@ -85,7 +97,9 @@ public class ElementTreeIterator extends TreeIterator<Element>
     {
         String rootId = getId(element);
         String rootPath = "/" + rootId;
-        return new IterationStep<>(element, rootId, rootPath);
+        IterationStep<Element> step = new IterationStep<>(element, rootId, rootPath);
+        step.setRoot(true);
+        return step;
     }
 
     protected String getId(Element element)
@@ -93,6 +107,12 @@ public class ElementTreeIterator extends TreeIterator<Element>
         String id = element.getLocalName();
         if (id == null) throw new RuntimeException("Please use DocumentBuilderFactory.setNamespaceAware(true).");
         return id;
+    }
+
+    protected void remove(Element parent, List<Element> children)
+    {
+        if (children == null) return;
+        children.forEach(child -> parent.removeChild(child));
     }
 
 }

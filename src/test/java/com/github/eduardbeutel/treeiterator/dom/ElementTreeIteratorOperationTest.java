@@ -184,4 +184,92 @@ public class ElementTreeIteratorOperationTest
         // then -> UnsupportedFeatureException
     }
 
+    @Test
+    public void remove_topDown()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>        
+        """);
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book").remove()
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void remove_bottomUp()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <books>
+                        <book>
+                            <title />
+                            <author />
+                        </book>
+                        <book>
+                            <title />
+                            <author />
+                        </book>
+                    </books>
+                </library>
+        """);
+
+        // when
+        ElementTreeIterator.bottomUp(document)
+                .whenId("book").remove()
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library><books></books></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test(expected = UnsupportedFeatureException.class)
+    public void removeRoot_indirectly_throwsException()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("library").remove()
+                .execute()
+        ;
+
+        // then -> UnsupportedFeatureException
+    }
+
+    @Test(expected = UnsupportedFeatureException.class)
+    public void removeRoot_directly_throwsException()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenRoot().remove()
+                .execute()
+        ;
+
+        // then -> UnsupportedFeatureException
+    }
+
 }

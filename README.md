@@ -87,3 +87,4 @@ Operations:
 
 - then()
 - skip()
+- remove()
