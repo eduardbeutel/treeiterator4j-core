@@ -42,9 +42,12 @@ public class Operations<Node>
         return thenForStep(executableConsumer);
     }
 
-    public Conditions<Node> and()
+    public Conditions<Node> skip()
     {
-        return iterator.getConditions();
+        if (TraversalDirection.BOTTOM_UP == iterator.getDirection())
+            throw new UnsupportedFeatureException("skip() can not be used in bottomUp() mode.");
+        Consumer<IterationStep<Node>> markToSkip = step -> step.setSkip(true);
+        return thenForStep(markToSkip);
     }
 
     public Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)
@@ -54,4 +57,10 @@ public class Operations<Node>
                 .getConditions()
                 ;
     }
+
+    public Conditions<Node> and()
+    {
+        return iterator.getConditions();
+    }
+
 }

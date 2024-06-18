@@ -77,6 +77,7 @@ public abstract class TreeIterator<Node>
         for (Command command : getCommands())
         {
             executor.execute(command, step);
+            if (step.isSkip()) return;
         }
     }
 

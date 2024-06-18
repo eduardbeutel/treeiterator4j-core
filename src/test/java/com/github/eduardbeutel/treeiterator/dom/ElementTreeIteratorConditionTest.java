@@ -313,4 +313,34 @@ public class ElementTreeIteratorConditionTest
         assertEquals(Arrays.asList("book"), secondResult);
     }
 
+    @Test
+    public void skip()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book1>
+                        <title1 />
+                    </book1>
+                    <book2>
+                        <title2 />
+                    </book2>
+                    <book3>
+                        <title3 />
+                    </book3>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book2").skip()
+                .always().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("library", "book1", "title1", "book3", "title3"), result);
+    }
+
 }

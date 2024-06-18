@@ -86,3 +86,4 @@ Conditions:
 Operations:
 
 - then()
+- skip()

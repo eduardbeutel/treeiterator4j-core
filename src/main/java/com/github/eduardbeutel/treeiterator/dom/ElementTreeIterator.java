@@ -55,7 +55,11 @@ public class ElementTreeIterator extends TreeIterator<Element>
 
     protected void iterateStep(IterationStep<Element> step)
     {
-        if (TraversalDirection.TOP_DOWN == getDirection()) executeCommands(step);
+        if (TraversalDirection.TOP_DOWN == getDirection())
+        {
+            executeCommands(step);
+            if (step.isSkip()) return;
+        }
 
         NodeList children = step.getNode().getChildNodes();
         for (int i = 0; i < children.getLength(); i++)

@@ -6,6 +6,7 @@ public class IterationStep<IdNode>
     private IdNode node;
     private String id;
     private String path;
+    private boolean skip;
 
     public IterationStep(IdNode node, String id, String path)
     {
@@ -29,4 +30,13 @@ public class IterationStep<IdNode>
         return path;
     }
 
+    public void setSkip(boolean skip)
+    {
+        this.skip = skip;
+    }
+
+    public boolean isSkip()
+    {
+        return skip;
+    }
 }
