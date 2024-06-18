@@ -35,13 +35,25 @@ public class Conditions<Node>
 
     public Operations<Node> whenId(String id)
     {
-        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(step.getId()).test(id);
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(id).test(step.getId());
         return whenForStep(executablePredicate);
     }
 
     public Operations<Node> whenPath(String path)
     {
-        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(step.getPath()).test(path);
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(path).test(step.getPath());
+        return whenForStep(executablePredicate);
+    }
+
+    public Operations<Node> whenIdMatches(String pattern)
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringMatches(pattern).test(step.getId());
+        return whenForStep(executablePredicate);
+    }
+
+    public Operations<Node> whenPathMatches(String pattern)
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringMatches(pattern).test(step.getPath());
         return whenForStep(executablePredicate);
     }
 

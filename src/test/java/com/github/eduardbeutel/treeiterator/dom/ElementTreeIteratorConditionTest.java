@@ -165,4 +165,53 @@ public class ElementTreeIteratorConditionTest
         assertEquals(Arrays.asList("library"), result);
     }
 
+    @Test
+    public void whenIdMatches()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <my-book/>
+                    <book/>
+                    <not-a-Book/>
+                </library>        
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenIdMatches(".*book.*").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("my-book", "book"), result);
+    }
+
+    @Test
+    public void whenPathMatches()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                        <author />
+                        <author />
+                    </book>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenPathMatches("/.*/author").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("author", "author", "author"), result);
+    }
+
 }

@@ -18,6 +18,16 @@ public class ElementTreeIterator extends TreeIterator<Element>
         return new ElementTreeIterator(document.getDocumentElement(), TraversalDirection.BOTTOM_UP).getConditions();
     }
 
+    public static Conditions<Element> topDown(Element element)
+    {
+        return new ElementTreeIterator(element, TraversalDirection.TOP_DOWN).getConditions();
+    }
+
+    public static Conditions<Element> bottomUp(Element element)
+    {
+        return new ElementTreeIterator(element, TraversalDirection.BOTTOM_UP).getConditions();
+    }
+
     protected ElementTreeIterator(Element root, TraversalDirection direction)
     {
         super(root, direction);

@@ -1,6 +1,7 @@
 # treeiterator
 
 TreeIterator is a pattern for declarative (fluent) iterators that allow commands to be applied to each tree node. A command consists in its simplest form of a condition and an operation. The pattern is useful for the manipulation of tree objects like XML or JSON and information gathering. The tree is iterated only once. The current implementation is in Java but the pattern is not language specific.
+Details regarding the Java implementation are at the end of this document.
 
 ### Structure
 
@@ -65,4 +66,20 @@ JDK21 [![codecov](https://codecov.io/gh/eduardbeutel/treeiterator/graph/badge.sv
 
 Code that can be reused to implement this pattern for any tree data structure is in the common package.
 
-org.w3c.dom XML library is supported by the dom.ElemenTreeIterator class.
+Supported trees:
+
+- org.w3c.dom.Element and .Document by ElementTreeIterator
+
+Conditions:
+
+- always()
+- when()
+- whenNot()
+- whenId()
+- whenPath()
+- whenIdMatches()
+- whenPathMatches()
+
+Operations:
+
+- then()

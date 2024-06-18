@@ -42,7 +42,7 @@ public class Operations<Node>
         return thenForStep(executableConsumer);
     }
 
-    protected Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)
+    public Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)
     {
         return iterator
                 .addOperation(consumer)
