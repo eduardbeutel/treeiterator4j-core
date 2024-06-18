@@ -49,7 +49,7 @@ public abstract class TreeIterator<Node>
 
     protected TreeIterator<Node> addCondition(Predicate<IterationStep<Node>> condition)
     {
-        getCurrentCommand().setCondition(condition);
+        getCurrentCommand().addCondition(condition);
         return this;
     }
 
@@ -69,7 +69,7 @@ public abstract class TreeIterator<Node>
         if (commands.isEmpty()) return;
         int lastIndex = commands.size() - 1;
         Command lastCommand = commands.get(lastIndex);
-        if (lastCommand.getCondition() == null ) commands.remove(lastIndex);
+        if (lastCommand.getConditions().isEmpty() ) commands.remove(lastIndex);
     }
 
     protected void executeCommands(IterationStep<Node> step)

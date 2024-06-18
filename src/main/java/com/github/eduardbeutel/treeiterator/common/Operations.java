@@ -42,6 +42,11 @@ public class Operations<Node>
         return thenForStep(executableConsumer);
     }
 
+    public Conditions<Node> and()
+    {
+        return iterator.getConditions();
+    }
+
     public Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)
     {
         return iterator

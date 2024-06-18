@@ -1,16 +1,23 @@
 package com.github.eduardbeutel.treeiterator.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Command<Node>
 {
-    private Predicate<IterationStep<Node>> condition;
+    private List<Predicate<IterationStep<Node>>> conditions = new ArrayList<>();
     private Consumer<IterationStep<Node>> operation;
 
-    public Predicate<IterationStep<Node>> getCondition()
+    public List<Predicate<IterationStep<Node>>> getConditions()
     {
-        return condition;
+        return conditions;
+    }
+
+    public void addCondition(Predicate<IterationStep<Node>> condition)
+    {
+        conditions.add(condition);
     }
 
     public Consumer<IterationStep<Node>> getOperation()
@@ -18,13 +25,9 @@ public class Command<Node>
         return operation;
     }
 
-    public void setCondition(Predicate<IterationStep<Node>> condition)
-    {
-        this.condition = condition;
-    }
-
     public void setOperation(Consumer<IterationStep<Node>> operation)
     {
         this.operation = operation;
     }
+
 }
