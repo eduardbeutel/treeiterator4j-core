@@ -1,5 +1,7 @@
 package com.github.eduardbeutel.treeiterator.common;
 
+import java.util.Optional;
+
 public class IterationStep<Node>
 {
 
@@ -10,6 +12,8 @@ public class IterationStep<Node>
     private boolean skip = false;
     private boolean remove = false;
     private boolean root = false;
+
+    private Optional<Node> replacement = Optional.empty();
 
     public IterationStep(Node node, String id, String path)
     {
@@ -60,5 +64,20 @@ public class IterationStep<Node>
 
     public void setRoot(boolean root) {
         this.root = root;
+    }
+
+    public boolean isReplace()
+    {
+        return replacement.isPresent();
+    }
+
+    public void setReplacement(Node replacement)
+    {
+        this.replacement = Optional.of(replacement);
+    }
+
+    public Node getReplacement()
+    {
+        return replacement.get();
     }
 }

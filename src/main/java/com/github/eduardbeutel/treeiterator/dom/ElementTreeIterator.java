@@ -12,29 +12,22 @@ import java.util.List;
 public class ElementTreeIterator extends TreeIterator<Element>
 {
 
+    private Document document;
+
     public static Conditions<Element> topDown(Document document)
     {
-        return new ElementTreeIterator(document.getDocumentElement(), TraversalDirection.TOP_DOWN).getConditions();
+        return new ElementTreeIterator(document, TraversalDirection.TOP_DOWN).getConditions();
     }
 
     public static Conditions<Element> bottomUp(Document document)
     {
-        return new ElementTreeIterator(document.getDocumentElement(), TraversalDirection.BOTTOM_UP).getConditions();
+        return new ElementTreeIterator(document, TraversalDirection.BOTTOM_UP).getConditions();
     }
 
-    public static Conditions<Element> topDown(Element element)
+    protected ElementTreeIterator(Document document, TraversalDirection direction)
     {
-        return new ElementTreeIterator(element, TraversalDirection.TOP_DOWN).getConditions();
-    }
-
-    public static Conditions<Element> bottomUp(Element element)
-    {
-        return new ElementTreeIterator(element, TraversalDirection.BOTTOM_UP).getConditions();
-    }
-
-    protected ElementTreeIterator(Element root, TraversalDirection direction)
-    {
-        super(root, direction);
+        super(document.getDocumentElement(), direction);
+        this.document = document;
     }
 
     @Override
@@ -42,6 +35,7 @@ public class ElementTreeIterator extends TreeIterator<Element>
     {
         IterationStep<Element> step = createFirstStep(element);
         iterateStep(step);
+        if (step.isReplace()) document.replaceChild(step.getReplacement(), step.getNode());
     }
 
     @Override
@@ -65,6 +59,7 @@ public class ElementTreeIterator extends TreeIterator<Element>
         }
 
         List<Element> toRemove = null;
+        List<IterationStep<Element>> toReplace = null;
         NodeList children = step.getNode().getChildNodes();
         for (int i = 0; i < children.getLength(); i++)
         {
@@ -80,9 +75,15 @@ public class ElementTreeIterator extends TreeIterator<Element>
                 if (toRemove == null) toRemove = new ArrayList<>();
                 toRemove.add(childStep.getNode());
             }
+            else if (childStep.isReplace())
+            {
+                if (toReplace == null) toReplace = new ArrayList<>();
+                toReplace.add(childStep);
+            }
         }
 
         remove(step.getNode(), toRemove);
+        replace(step.getNode(), toReplace);
 
         if (TraversalDirection.BOTTOM_UP == getDirection()) executeCommands(step);
     }
@@ -113,6 +114,12 @@ public class ElementTreeIterator extends TreeIterator<Element>
     {
         if (children == null) return;
         children.forEach(child -> parent.removeChild(child));
+    }
+
+    protected void replace(Element parent, List<IterationStep<Element>> children)
+    {
+        if (children == null) return;
+        children.forEach(child -> parent.replaceChild(child.getReplacement(), child.getNode()));
     }
 
 }

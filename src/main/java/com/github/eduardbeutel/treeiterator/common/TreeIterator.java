@@ -100,7 +100,7 @@ public abstract class TreeIterator<Node>
         for (Command command : getCommands())
         {
             executeCommand(command, step);
-            if (step.isSkip() || step.isRemove()) return;
+            if (step.isSkip() || step.isRemove() || step.isReplace()) return;
         }
     }
 

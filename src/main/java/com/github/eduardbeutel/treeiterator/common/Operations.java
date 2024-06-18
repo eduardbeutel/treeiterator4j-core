@@ -1,7 +1,6 @@
 package com.github.eduardbeutel.treeiterator.common;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.*;
 
 public class Operations<Node>
 {
@@ -57,6 +56,36 @@ public class Operations<Node>
             if(step.isRoot()) throw new UnsupportedFeatureException("The root element can not be removed.");
             step.setRemove(true);
         };
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> replace(Node node)
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(node);
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> replace(Supplier<Node> supplier)
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(supplier.get());
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> replace(Function<Node, Node> function)
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(function.apply(step.getNode()));
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> replace(BiFunction<Node, String, Node> function)
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(function.apply(step.getNode(), step.getId()));
+        return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> replace(TriFunction<Node, String, String, Node> function)
+    {
+        Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(function.apply(step.getNode(), step.getId(), step.getPath()));
         return thenForStep(executableConsumer);
     }
 

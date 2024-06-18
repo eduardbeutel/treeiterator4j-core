@@ -5,6 +5,7 @@ import com.github.eduardbeutel.treeiterator.test.XmlUtils;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -270,6 +271,156 @@ public class ElementTreeIteratorOperationTest
         ;
 
         // then -> UnsupportedFeatureException
+    }
+
+    @Test
+    public void replace()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """);
+        Element replacement = document.createElement("anotherBook");
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book").replace(replacement)
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library><anotherBook /></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void replace_root()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """);
+        Element replacement = document.createElement("anotherBook");
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("library").replace(() -> replacement)
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<anotherBook />"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void replace_nodeArgument()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """);
+
+        Element replacement = document.createElement("anotherBook");
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book").replace((node) ->
+                {
+                    replacement.setTextContent(node.getLocalName());
+                    return replacement;
+                })
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library><anotherBook>book</anotherBook></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void replace_nodeAndIdArgument()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """);
+
+        Element replacement = document.createElement("anotherBook");
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book").replace((node, id) ->
+                {
+                    replacement.setTextContent(id + "/" + node.getLocalName());
+                    return replacement;
+                })
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library><anotherBook>book/book</anotherBook></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void replace_nodeAndIdAndPathArgument()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """);
+
+        Element replacement = document.createElement("anotherBook");
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book").replace((node, id, path) ->
+                {
+                    replacement.setTextContent(id + "/" + node.getLocalName() + path);
+                    return replacement;
+                })
+                .execute()
+        ;
+
+        // then
+        Document expectedDocument = XmlUtils.createDocument(
+                "<library><anotherBook>book/book/library/book</anotherBook></library>"
+        );
+        assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
     }
 
 }
