@@ -1,5 +1,8 @@
 package com.github.eduardbeutel.treeiterator.common;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.*;
 
 public class Operations<Node>
@@ -87,6 +90,26 @@ public class Operations<Node>
     {
         Consumer<IterationStep<Node>> executableConsumer = step -> step.setReplacement(function.apply(step.getNode(), step.getId(), step.getPath()));
         return thenForStep(executableConsumer);
+    }
+
+    public Conditions<Node> set(AtomicReference<Node> reference)
+    {
+        return then(node -> reference.set(node));
+    }
+
+    public Conditions<Node> collect(Collection<Node> collection)
+    {
+        return then(node -> collection.add(node));
+    }
+
+    public Conditions<Node> collectById(Map<String, Node> map)
+    {
+        return then((node, id) -> map.put(id, node));
+    }
+
+    public Conditions<Node> collectByPath(Map<String, Node> map)
+    {
+        return then((node, id, path) -> map.put(path, node));
     }
 
     public Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)

@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -19,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 public class ElementTreeIteratorOperationTest
 {
 
-    public static String DEFAULT_DOCUMENT = """
+    public static String DOC1 = """
                 <library>
                     <book id="1"/>
                     <book/>
@@ -27,18 +25,20 @@ public class ElementTreeIteratorOperationTest
                 </library>
         """;
 
+    public static String DOC2 = """
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>
+        """;
+
     @Test
     public void stop()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title/>
-                        <author/>
-                    </book>
-                </library>
-        """);
+        Document document = XmlUtils.createDocument(DOC2);
         List<String> result = new ArrayList<>();
 
         // when
@@ -56,7 +56,7 @@ public class ElementTreeIteratorOperationTest
     public void then()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
         AtomicReference<Boolean> result = new AtomicReference<>(false);
 
         // when
@@ -73,7 +73,7 @@ public class ElementTreeIteratorOperationTest
     public void then_nodeArgument()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -96,7 +96,7 @@ public class ElementTreeIteratorOperationTest
     public void then_nodeAndIdArguments()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -119,7 +119,7 @@ public class ElementTreeIteratorOperationTest
     public void then_nodeAndIdAndPathArguments()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -172,7 +172,7 @@ public class ElementTreeIteratorOperationTest
     public void skip_usedInBottomUpMode_throwsException()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
         List<String> result = new ArrayList<>();
 
         // when
@@ -189,14 +189,7 @@ public class ElementTreeIteratorOperationTest
     public void remove_topDown()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>        
-        """);
+        Document document = XmlUtils.createDocument(DOC2);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -247,7 +240,7 @@ public class ElementTreeIteratorOperationTest
     public void removeRoot_indirectly_throwsException()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -262,7 +255,7 @@ public class ElementTreeIteratorOperationTest
     public void removeRoot_directly_throwsException()
     {
         // given
-        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        Document document = XmlUtils.createDocument(DOC1);
 
         // when
         ElementTreeIterator.topDown(document)
@@ -277,14 +270,7 @@ public class ElementTreeIteratorOperationTest
     public void replace()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>
-        """);
+        Document document = XmlUtils.createDocument(DOC2);
         Element replacement = document.createElement("anotherBook");
 
         // when
@@ -304,14 +290,7 @@ public class ElementTreeIteratorOperationTest
     public void replace_root()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>
-        """);
+        Document document = XmlUtils.createDocument(DOC2);
         Element replacement = document.createElement("anotherBook");
 
         // when
@@ -331,15 +310,7 @@ public class ElementTreeIteratorOperationTest
     public void replace_nodeArgument()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>
-        """);
-
+        Document document = XmlUtils.createDocument(DOC2);
         Element replacement = document.createElement("anotherBook");
 
         // when
@@ -363,15 +334,7 @@ public class ElementTreeIteratorOperationTest
     public void replace_nodeAndIdArgument()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>
-        """);
-
+        Document document = XmlUtils.createDocument(DOC2);
         Element replacement = document.createElement("anotherBook");
 
         // when
@@ -395,15 +358,7 @@ public class ElementTreeIteratorOperationTest
     public void replace_nodeAndIdAndPathArgument()
     {
         // given
-        Document document = XmlUtils.createDocument("""
-                <library>
-                    <book>
-                        <title />
-                        <author />
-                    </book>
-                </library>
-        """);
-
+        Document document = XmlUtils.createDocument(DOC2);
         Element replacement = document.createElement("anotherBook");
 
         // when
@@ -421,6 +376,82 @@ public class ElementTreeIteratorOperationTest
                 "<library><anotherBook>book/book/library/book</anotherBook></library>"
         );
         assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void set()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DOC2);
+        AtomicReference<Element> ref = new AtomicReference<Element>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenLeaf().set(ref)
+                .execute()
+        ;
+
+        // then
+        assertEquals("author", ref.get().getLocalName());
+    }
+
+    @Test
+    public void collect()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DOC2);
+        List<Element> leafs = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenLeaf().collect(leafs)
+                .execute()
+        ;
+
+        // then
+        assertEquals(2, leafs.size());
+        assertEquals("title", leafs.get(0).getLocalName());
+        assertEquals("author", leafs.get(1).getLocalName());
+    }
+
+    @Test
+    public void collectById()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DOC2);
+        Map<String, Element> elements = new LinkedHashMap<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .always().collectById(elements)
+                .execute()
+        ;
+
+        // then
+        assertEquals(4, elements.size());
+        Arrays.asList("library", "book", "title", "author")
+                .forEach(item -> assertEquals(item, elements.get(item).getLocalName()));
+    }
+
+    @Test
+    public void collectByPath()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DOC2);
+        Map<String, Element> elements = new LinkedHashMap<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .always().collectByPath(elements)
+                .execute()
+        ;
+
+        // then
+        assertEquals(4, elements.size());
+        assertEquals("library", elements.get("/library").getLocalName());
+        assertEquals("book", elements.get("/library/book").getLocalName());
+        assertEquals("title", elements.get("/library/book/title").getLocalName());
+        assertEquals("author", elements.get("/library/book/author").getLocalName());
     }
 
 }

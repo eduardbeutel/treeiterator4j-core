@@ -89,3 +89,5 @@ Operations:
 - skip()
 - remove()
 - replace()
+- set()
+- collect(), collectById(), collectByPath()
