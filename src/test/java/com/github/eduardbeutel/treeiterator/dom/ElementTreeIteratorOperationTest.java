@@ -1,5 +1,6 @@
 package com.github.eduardbeutel.treeiterator.dom;
 
+import com.github.eduardbeutel.treeiterator.common.UnsupportedFeatureException;
 import com.github.eduardbeutel.treeiterator.test.XmlUtils;
 
 import org.junit.Test;
@@ -134,6 +135,53 @@ public class ElementTreeIteratorOperationTest
                 </library>
         """);
         assertThat(document, isIdenticalTo(expectedDocument).ignoreWhitespace());
+    }
+
+    @Test
+    public void skip()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book1>
+                        <title1 />
+                    </book1>
+                    <book2>
+                        <title2 />
+                    </book2>
+                    <book3>
+                        <title3 />
+                    </book3>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book2").skip()
+                .always().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("library", "book1", "title1", "book3", "title3"), result);
+    }
+
+    @Test(expected = UnsupportedFeatureException.class)
+    public void skip_usedInBottomUpMode_throwsException()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.bottomUp(document)
+                .whenId("book").skip()
+                .always().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then -> UnsupportedFeatureException
     }
 
 }
