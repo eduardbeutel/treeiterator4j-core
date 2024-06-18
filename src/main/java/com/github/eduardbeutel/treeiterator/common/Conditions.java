@@ -39,6 +39,12 @@ public class Conditions<Node>
         return whenForStep(executablePredicate);
     }
 
+    public Operations<Node> whenPath(String path)
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(step.getPath()).test(path);
+        return whenForStep(executablePredicate);
+    }
+
     public Operations<Node> whenForStep(Predicate<IterationStep<Node>> condition)
     {
         return iterator

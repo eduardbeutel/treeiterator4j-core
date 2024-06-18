@@ -103,13 +103,13 @@ public class ElementTreeIteratorConditionTest
     public void whenId_xmlWithNamespace()
     {
         // given
-        Document document = XmlUtils.createDocument(
-                "<m:document xmlns:m=\"http://my.namespace.com\">\n" +
-                        "    <m:book1/>\n" +
-                        "    <m:book2/>\n" +
-                        "    <m:book1/>\n" +
-                        "</m:document>"
-        );
+        Document document = XmlUtils.createDocument("""
+                <m:document xmlns:m="http://my.namespace.com">
+                    <m:book1/>
+                    <m:book2/>
+                    <m:book1/>
+                </m:document>
+        """);
         List<String> result = new ArrayList<>();
 
         // when
@@ -121,4 +121,48 @@ public class ElementTreeIteratorConditionTest
         // then
         assertEquals(Arrays.asList("book1", "book1"), result);
     }
+
+    @Test
+    public void whenPath()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                        <author />
+                        <author />
+                    </book>
+                </library>
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenPath("/library/book/author").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("author", "author", "author"), result);
+    }
+
+    @Test
+    public void whenPath_rootElement()
+    {
+        // given
+        Document document = XmlUtils.createDocument(DEFAULT_DOCUMENT);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenPath("/library").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("library"), result);
+    }
+
 }
