@@ -80,6 +80,8 @@ Conditions:
 - whenIdMatches()
 - whenPathMatches()
 - whenRoot()
+- whenLeaf()
+- whenNotLeaf()
 
 Operations:
 

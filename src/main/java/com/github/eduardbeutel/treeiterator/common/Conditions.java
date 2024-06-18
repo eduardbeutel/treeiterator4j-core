@@ -66,6 +66,18 @@ public class Conditions<Node>
         return whenForStep(executablePredicate);
     }
 
+    public Operations<Node> whenLeaf()
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> iterator.isLeaf(step.getNode());
+        return whenForStep(executablePredicate);
+    }
+
+    public Operations<Node> whenNotLeaf()
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> !iterator.isLeaf(step.getNode());
+        return whenForStep(executablePredicate);
+    }
+
     public Operations<Node> whenForStep(Predicate<IterationStep<Node>> condition)
     {
         return iterator

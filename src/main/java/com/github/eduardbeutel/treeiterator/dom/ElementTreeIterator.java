@@ -3,6 +3,7 @@ package com.github.eduardbeutel.treeiterator.dom;
 import com.github.eduardbeutel.treeiterator.common.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ElementTreeIterator extends TreeIterator<Element>
@@ -38,6 +39,18 @@ public class ElementTreeIterator extends TreeIterator<Element>
     {
         IterationStep<Element> step = createFirstStep(element);
         iterateStep(step);
+    }
+
+    @Override
+    protected boolean isLeaf(Element element)
+    {
+        int nrChildren = element.getChildNodes().getLength();
+        for (int i = 0; i < nrChildren; i++)
+        {
+            Node childNode = element.getChildNodes().item(i);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) return false;
+        }
+        return true;
     }
 
     protected void iterateStep(IterationStep<Element> step)

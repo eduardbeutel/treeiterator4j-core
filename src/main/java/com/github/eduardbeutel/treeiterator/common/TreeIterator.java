@@ -62,6 +62,8 @@ public abstract class TreeIterator<Node>
 
     protected abstract void iterate(Node node);
 
+    protected abstract boolean isLeaf(Node node);
+
     protected void clearLastCommandIfEmpty()
     {
         if (commands.isEmpty()) return;

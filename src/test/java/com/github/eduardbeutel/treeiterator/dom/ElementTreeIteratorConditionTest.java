@@ -237,4 +237,52 @@ public class ElementTreeIteratorConditionTest
         assertEquals(Arrays.asList("library"), result);
     }
 
+    @Test
+    public void whenLeaf()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenLeaf().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("title", "author"), result);
+    }
+
+    @Test
+    public void whenNotLeaf()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                        <author />
+                    </book>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenNotLeaf().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("library", "book"), result);
+    }
+
 }
