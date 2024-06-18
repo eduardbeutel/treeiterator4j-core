@@ -13,9 +13,9 @@ public class CommandExecutor<Node>
         }
     }
 
-    protected boolean evaluateCondition(Predicate<Node> condition, IterationStep<Node> step)
+    protected boolean evaluateCondition(Predicate<IterationStep<Node>> condition, IterationStep<Node> step)
     {
-        return condition.test(step.getNode());
+        return condition.test(step);
     }
 
     protected void executeOperation(Consumer<IterationStep<Node>> operation, IterationStep<Node> step)

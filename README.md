@@ -61,9 +61,8 @@ The ideas for declarative tree iterators were brainstormed by Eduard Beutel and 
 
 ### Java Implementation
 
-[![codecov](https://codecov.io/gh/eduardbeutel/treeiterator/graph/badge.svg?token=QDND4FUF1R)](https://codecov.io/gh/eduardbeutel/treeiterator)
+JDK21 [![codecov](https://codecov.io/gh/eduardbeutel/treeiterator/graph/badge.svg?token=QDND4FUF1R)](https://codecov.io/gh/eduardbeutel/treeiterator)
 
-The only dependency is JDK21.
 Code that can be reused to implement this pattern for any tree data structure is in the common package.
 
 org.w3c.dom XML library is supported by the dom.ElemenTreeIterator class.

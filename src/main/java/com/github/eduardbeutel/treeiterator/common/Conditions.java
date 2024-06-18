@@ -1,5 +1,6 @@
 package com.github.eduardbeutel.treeiterator.common;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class Conditions<Node>
@@ -23,15 +24,27 @@ public class Conditions<Node>
 
     public Operations<Node> when(Predicate<Node> condition)
     {
-        return iterator
-                .addCondition(condition)
-                .getOperations()
-                ;
+        Predicate<IterationStep<Node>> executablePredicate = step -> condition.test(step.getNode());
+        return whenForStep(executablePredicate);
     }
 
     public Operations<Node> whenNot(Predicate<Node> condition)
     {
         return when(condition.negate());
+    }
+
+    public Operations<Node> whenId(String id)
+    {
+        Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringEquals(step.getId()).test(id);
+        return whenForStep(executablePredicate);
+    }
+
+    public Operations<Node> whenForStep(Predicate<IterationStep<Node>> condition)
+    {
+        return iterator
+                .addCondition(condition)
+                .getOperations()
+                ;
     }
 
 }

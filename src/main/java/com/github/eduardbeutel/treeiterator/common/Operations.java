@@ -38,8 +38,8 @@ public class Operations<Node>
 
     public Conditions<Node> then(TriConsumer<Node, String, String> consumer)
     {
-        Consumer<IterationStep<Node>> executeConsumer = step -> consumer.accept(step.getNode(), step.getId(), step.getPath());
-        return thenForStep(executeConsumer);
+        Consumer<IterationStep<Node>> executableConsumer = step -> consumer.accept(step.getNode(), step.getId(), step.getPath());
+        return thenForStep(executableConsumer);
     }
 
     protected Conditions<Node> thenForStep(Consumer<IterationStep<Node>> consumer)

@@ -75,4 +75,50 @@ public class ElementTreeIteratorConditionTest
         // then
         assertEquals(Arrays.asList("library", "book", "book", "book"), result);
     }
+
+    @Test
+    public void whenId()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+            <library>
+                <book1/>
+                <book2/>
+                <book1/>
+            </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book1").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("book1", "book1"), result);
+    }
+
+    @Test
+    public void whenId_xmlWithNamespace()
+    {
+        // given
+        Document document = XmlUtils.createDocument(
+                "<m:document xmlns:m=\"http://my.namespace.com\">\n" +
+                        "    <m:book1/>\n" +
+                        "    <m:book2/>\n" +
+                        "    <m:book1/>\n" +
+                        "</m:document>"
+        );
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenId("book1").then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("book1", "book1"), result);
+    }
 }

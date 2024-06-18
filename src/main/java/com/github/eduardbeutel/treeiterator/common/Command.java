@@ -5,10 +5,10 @@ import java.util.function.Predicate;
 
 public class Command<Node>
 {
-    private Predicate<Node> condition;
+    private Predicate<IterationStep<Node>> condition;
     private Consumer<IterationStep<Node>> operation;
 
-    public Predicate<Node> getCondition()
+    public Predicate<IterationStep<Node>> getCondition()
     {
         return condition;
     }
@@ -18,7 +18,7 @@ public class Command<Node>
         return operation;
     }
 
-    public void setCondition(Predicate<Node> condition)
+    public void setCondition(Predicate<IterationStep<Node>> condition)
     {
         this.condition = condition;
     }

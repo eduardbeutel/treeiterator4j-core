@@ -47,7 +47,7 @@ public abstract class TreeIterator<Node>
         return conditions;
     }
 
-    protected TreeIterator<Node> addCondition(Predicate<Node> condition)
+    protected TreeIterator<Node> addCondition(Predicate<IterationStep<Node>> condition)
     {
         getCurrentCommand().setCondition(condition);
         return this;
