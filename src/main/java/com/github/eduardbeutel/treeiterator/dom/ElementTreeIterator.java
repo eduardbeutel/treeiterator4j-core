@@ -10,17 +10,17 @@ public class ElementTreeIterator extends TreeIterator<Element>
 
     public static Conditions<Element> topDown(Document document)
     {
-        return new ElementTreeIterator(document, TraversalDirection.TOP_DOWN).getConditions();
+        return new ElementTreeIterator(document.getDocumentElement(), TraversalDirection.TOP_DOWN).getConditions();
     }
 
     public static Conditions<Element> bottomUp(Document document)
     {
-        return new ElementTreeIterator(document, TraversalDirection.BOTTOM_UP).getConditions();
+        return new ElementTreeIterator(document.getDocumentElement(), TraversalDirection.BOTTOM_UP).getConditions();
     }
 
-    protected ElementTreeIterator(Document document, TraversalDirection direction)
+    protected ElementTreeIterator(Element root, TraversalDirection direction)
     {
-        super(document.getDocumentElement(), direction);
+        super(root, direction);
     }
 
     @Override
@@ -32,13 +32,9 @@ public class ElementTreeIterator extends TreeIterator<Element>
 
     protected void iterateStep(IterationStep<Element> step)
     {
-        if (TraversalDirection.TOP_DOWN == getDirection())
-        {
-            executeCommands(step);
-        }
+        if (TraversalDirection.TOP_DOWN == getDirection()) executeCommands(step);
 
         NodeList children = step.getNode().getChildNodes();
-
         for (int i = 0; i < children.getLength(); i++)
         {
             org.w3c.dom.Node childNode = children.item(i);
@@ -50,15 +46,6 @@ public class ElementTreeIterator extends TreeIterator<Element>
         }
 
         if (TraversalDirection.BOTTOM_UP == getDirection()) executeCommands(step);
-    }
-
-    protected void executeCommands(IterationStep<Element> step)
-    {
-        CommandExecutor<Element> executor = getExecutor();
-        for (Command command : getCommands())
-        {
-            executor.execute(command, step);
-        }
     }
 
     protected IterationStep<Element> createChildStep(IterationStep<Element> parentStep, Element child, String childId)

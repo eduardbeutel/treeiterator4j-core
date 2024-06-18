@@ -1,5 +1,7 @@
 package com.github.eduardbeutel.treeiterator.common;
 
+import org.w3c.dom.Element;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +68,14 @@ public abstract class TreeIterator<Node>
         int lastIndex = commands.size() - 1;
         Command lastCommand = commands.get(lastIndex);
         if (lastCommand.getCondition() == null ) commands.remove(lastIndex);
+    }
+
+    protected void executeCommands(IterationStep<Node> step)
+    {
+        for (Command command : getCommands())
+        {
+            executor.execute(command, step);
+        }
     }
 
     protected CommandExecutor<Node> getExecutor()
