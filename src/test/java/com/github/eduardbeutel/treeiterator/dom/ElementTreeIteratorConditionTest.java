@@ -214,4 +214,27 @@ public class ElementTreeIteratorConditionTest
         assertEquals(Arrays.asList("author", "author", "author"), result);
     }
 
+    @Test
+    public void whenRoot()
+    {
+        // given
+        Document document = XmlUtils.createDocument("""
+                <library>
+                    <book>
+                        <title />
+                    </book>
+                </library>                
+        """);
+        List<String> result = new ArrayList<>();
+
+        // when
+        ElementTreeIterator.topDown(document)
+                .whenRoot().then(e -> result.add(e.getLocalName()))
+                .execute()
+        ;
+
+        // then
+        assertEquals(Arrays.asList("library"), result);
+    }
+
 }

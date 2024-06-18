@@ -79,6 +79,7 @@ Conditions:
 - whenPath()
 - whenIdMatches()
 - whenPathMatches()
+- whenRoot()
 
 Operations:
 

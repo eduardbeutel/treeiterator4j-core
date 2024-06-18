@@ -5,6 +5,9 @@ import java.util.function.Predicate;
 
 public class Conditions<Node>
 {
+
+    public Predicate<IterationStep<Node>> IS_ROOT_CONDITION = step -> step.getPath().lastIndexOf('/') == 0;
+
     private TreeIterator iterator;
 
     public Conditions(TreeIterator iterator)
@@ -54,6 +57,12 @@ public class Conditions<Node>
     public Operations<Node> whenPathMatches(String pattern)
     {
         Predicate<IterationStep<Node>> executablePredicate = step -> PredicateCreator.stringMatches(pattern).test(step.getPath());
+        return whenForStep(executablePredicate);
+    }
+
+    public Operations<Node> whenRoot()
+    {
+        Predicate<IterationStep<Node>> executablePredicate = IS_ROOT_CONDITION;
         return whenForStep(executablePredicate);
     }
 
